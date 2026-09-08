@@ -1,0 +1,23 @@
+{
+  "sender": "/opt/hhy/models/Mistral-7B-v0.1",
+  "receiver": "/opt/hhy/models/mistrallite",
+  "profiling_results": "../DroidSpeak-new/profiling_results.json",
+  "data_dir": "data/processed",
+  "output_dir": "results/hybrid_by_ratio/ratio_0p10",
+  "device": "cuda",
+  "sender_device": "",
+  "receiver_device": "",
+  "dtype": "auto",
+  "max_samples": null,
+  "max_new_tokens": 20,
+  "max_prompt_tokens": null,
+  "mode": "all",
+  "recompute_spans": "pareto",
+  "token_recompute_ratio": 0.1,
+  "token_ratios": "0.10",
+  "trust_remote_code": false,
+  "local_files_only": false,
+  "offline_only": false,
+  "no_full_prefill_baseline": false,
+  "no_aggressive_memory_cleanup": false
+}

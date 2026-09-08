@@ -1,0 +1,52 @@
+experiment:
+  name: llama31_8b_base_to_instruct
+  seed: 20260804
+  output_dir: ./outputs/llama31_8b_base_to_instruct
+  deterministic: false
+
+models:
+  # A：基础模型，负责独立片段的预填充和 KV 缓存发送。
+  sender_path: /opt/hhy/models/Llama-3.1-8B
+  # B：同源 Instruct 模型，负责最终回答及 DroidSpeak 的部分层重算。
+  receiver_path: /opt/hhy/models/Llama-3.1-8B-Instruct
+  # 整个实验统一采用 B 的 tokenizer；A/B 的实际 input_ids 必须逐 token 相同。
+  tokenizer_path: /opt/hhy/models/Llama-3.1-8B-Instruct
+  trust_remote_code: false
+  torch_dtype: bfloat16
+  attention_implementation: sdpa
+  device_sender: cuda:0
+  device_receiver: cuda:0
+
+data:
+  # 每行 JSONL：{"id": "...", "prompt": "...", "answers": ["..."]}
+  calibration_jsonl: ./data/calibration.jsonl
+  evaluation_jsonl: ./data/evaluation.jsonl
+  max_prompt_tokens: 8192
+  max_new_tokens: 32
+  prompt_suffix_tokens: 1
+
+cache:
+  root: ./outputs/llama31_8b_base_to_instruct/sender_cache
+  # 全量层组 profiling 需要保存每一个候选重算起点的 E 缓存。
+  capture_transition_layers: all
+  storage_dtype: bfloat16
+  overwrite: false
+
+profiling:
+  # 按论文遍历连续层组；all 表示长度从 1 到 L 的全部合法层组。
+  recompute_lengths: all
+  min_recompute_layers: 1
+  max_recompute_layers: null
+  start_layers: all
+  quality_metric: qa_f1
+  quality_tolerance_relative: 0.05
+  measure_latency_repetitions: 5
+  warmup_repetitions: 2
+  max_profiles_per_run: null
+
+evaluation:
+  selected_profile: null
+  report_per_example: true
+  save_generations: true
+  collect_cache_error: true
+  collect_transfer_bytes: true

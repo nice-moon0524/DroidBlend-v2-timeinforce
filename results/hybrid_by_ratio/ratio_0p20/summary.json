@@ -1,0 +1,785 @@
+{
+  "project": "DroidBlend-v2-timeinforce",
+  "mode": "all",
+  "reference_mode": false,
+  "reference_mode_note": "Hybrid/token methods do not read receiver full-prefix KV; receiver_full is reported only as a quality/latency baseline.",
+  "hybrid_definition": "layer 0 is always full-token recomputed for selection; recompute_layers is an arbitrary full-token continuous span; all other layers update selected tokens only",
+  "dataset_protocol": "DroidSpeak Pareto-compatible HotpotQA 50 split: data/processed/hotpotqa_train.jsonl",
+  "selection_layer": 0,
+  "selection_layer_meaning_zh": "第0层全token重算并用于计算sender/receiver K差异，固定不参与搜索",
+  "profiling_results": "../DroidSpeak-new/profiling_results.json",
+  "model": {
+    "sender": "/opt/hhy/models/Mistral-7B-v0.1",
+    "receiver": "/opt/hhy/models/mistrallite",
+    "sender_device": "cuda",
+    "receiver_device": "cuda",
+    "dtype": "auto",
+    "num_layers": 32
+  },
+  "parameters": {
+    "recompute_layers_zh": "任意连续全量重算层段[start,end]，通常来自DroidSpeak Pareto frontier",
+    "token_recompute_ratio_zh": "不在全量重算层段、且不是第0层的其他层中，继续用receiver重算并回填KV的token比例",
+    "recompute_spans": [
+      [
+        12,
+        13
+      ],
+      [
+        14,
+        17
+      ],
+      [
+        12,
+        17
+      ],
+      [
+        12,
+        19
+      ],
+      [
+        10,
+        19
+      ],
+      [
+        10,
+        21
+      ],
+      [
+        8,
+        21
+      ],
+      [
+        10,
+        25
+      ],
+      [
+        10,
+        27
+      ],
+      [
+        6,
+        25
+      ],
+      [
+        10,
+        31
+      ],
+      [
+        2,
+        25
+      ],
+      [
+        6,
+        31
+      ],
+      [
+        4,
+        31
+      ],
+      [
+        2,
+        31
+      ],
+      [
+        0,
+        31
+      ]
+    ],
+    "token_ratios": [
+      0.2
+    ],
+    "default_token_recompute_ratio": 0.2,
+    "droidspeak_pareto_baseline_zh": "来自DroidSpeak-new profiling_results.json的Pareto层组，不在本项目重新搜索"
+  },
+  "datasets": {
+    "hotpotqa_50": {
+      "receiver_full": {
+        "f1": 0.8003809523809522,
+        "prefill_latency_s_mean": 0.051334664337337015,
+        "prefill_latency_s_p50": 0.040138404816389084,
+        "prefill_latency_s_p95": 0.08446917003020644,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": true
+        }
+      },
+      "full_kv_reuse": {
+        "f1": 0.07471428571428572,
+        "prefill_latency_s_mean": 0.024739938862621783,
+        "prefill_latency_s_p50": 0.02473899768665433,
+        "prefill_latency_s_p95": 0.026024788850918412,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false
+        }
+      },
+      "droidspeak_layers_12_13": {
+        "f1": 0.2919267399267399,
+        "prefill_latency_s_mean": 0.028855693154037,
+        "prefill_latency_s_p50": 0.02790309814736247,
+        "prefill_latency_s_p95": 0.029624586133286356,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            12,
+            13
+          ],
+          "recompute_layer_count": 2,
+          "profiling_f1": 0.26541290429662523,
+          "profiling_latency_s": 0.03524902787990868
+        }
+      },
+      "droidspeak_layers_14_17": {
+        "f1": 0.48158851674641157,
+        "prefill_latency_s_mean": 0.029969770926982164,
+        "prefill_latency_s_p50": 0.02975671412423253,
+        "prefill_latency_s_p95": 0.031932589551433924,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            14,
+            17
+          ],
+          "recompute_layer_count": 4,
+          "profiling_f1": 0.4551417082357732,
+          "profiling_latency_s": 0.03771725999191403
+        }
+      },
+      "droidspeak_layers_12_17": {
+        "f1": 0.6387965367965369,
+        "prefill_latency_s_mean": 0.03220630748197437,
+        "prefill_latency_s_p50": 0.03103818465024233,
+        "prefill_latency_s_p95": 0.035719011910259724,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            12,
+            17
+          ],
+          "recompute_layer_count": 6,
+          "profiling_f1": 0.6182039072039074,
+          "profiling_latency_s": 0.04011740500107407
+        }
+      },
+      "droidspeak_layers_12_19": {
+        "f1": 0.6608571428571429,
+        "prefill_latency_s_mean": 0.03459231337532401,
+        "prefill_latency_s_p50": 0.03319853311404586,
+        "prefill_latency_s_p95": 0.03906976748257875,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            12,
+            19
+          ],
+          "recompute_layer_count": 8,
+          "profiling_f1": 0.6537586273375748,
+          "profiling_latency_s": 0.04258337010629475
+        }
+      },
+      "droidspeak_layers_10_19": {
+        "f1": 0.7536776556776558,
+        "prefill_latency_s_mean": 0.03691849054768682,
+        "prefill_latency_s_p50": 0.03489760356023908,
+        "prefill_latency_s_p95": 0.04215863402932882,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            19
+          ],
+          "recompute_layer_count": 10,
+          "profiling_f1": 0.7423838319202261,
+          "profiling_latency_s": 0.04520713660866022
+        }
+      },
+      "droidspeak_layers_10_21": {
+        "f1": 0.7557142857142857,
+        "prefill_latency_s_mean": 0.03922392347827554,
+        "prefill_latency_s_p50": 0.03670417796820402,
+        "prefill_latency_s_p95": 0.046148408297449345,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            21
+          ],
+          "recompute_layer_count": 12,
+          "profiling_f1": 0.7454436090225565,
+          "profiling_latency_s": 0.04771264833398163
+        }
+      },
+      "droidspeak_layers_08_21": {
+        "f1": 0.7727619047619048,
+        "prefill_latency_s_mean": 0.04169967290014029,
+        "prefill_latency_s_p50": 0.038427155930548906,
+        "prefill_latency_s_p95": 0.049849636759608976,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            8,
+            21
+          ],
+          "recompute_layer_count": 14,
+          "profiling_f1": 0.7688658008658008,
+          "profiling_latency_s": 0.05013351809233427
+        }
+      },
+      "droidspeak_layers_10_25": {
+        "f1": 0.7937142857142857,
+        "prefill_latency_s_mean": 0.044316607527434826,
+        "prefill_latency_s_p50": 0.04054742818698287,
+        "prefill_latency_s_p95": 0.05465269116684794,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            25
+          ],
+          "recompute_layer_count": 16,
+          "profiling_f1": 0.7937142857142857,
+          "profiling_latency_s": 0.052673409590497614
+        }
+      },
+      "droidspeak_layers_10_27": {
+        "f1": 0.787047619047619,
+        "prefill_latency_s_mean": 0.04696750873699784,
+        "prefill_latency_s_p50": 0.042542149778455496,
+        "prefill_latency_s_p95": 0.05961450920440255,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            27
+          ],
+          "recompute_layer_count": 18,
+          "profiling_f1": 0.787047619047619,
+          "profiling_latency_s": 0.05546192667447031
+        }
+      },
+      "droidspeak_layers_06_25": {
+        "f1": 0.7937142857142857,
+        "prefill_latency_s_mean": 0.04981150902807713,
+        "prefill_latency_s_p50": 0.04455822054296732,
+        "prefill_latency_s_p95": 0.06388602470979093,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            6,
+            25
+          ],
+          "recompute_layer_count": 20,
+          "profiling_f1": 0.7937142857142857,
+          "profiling_latency_s": 0.05806478277780116
+        }
+      },
+      "droidspeak_layers_10_31": {
+        "f1": 0.7950476190476191,
+        "prefill_latency_s_mean": 0.05236651975661516,
+        "prefill_latency_s_p50": 0.0468826312571764,
+        "prefill_latency_s_p95": 0.0674041394609958,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            31
+          ],
+          "recompute_layer_count": 22,
+          "profiling_f1": 0.7950476190476191,
+          "profiling_latency_s": 0.06418129810132087
+        }
+      },
+      "droidspeak_layers_02_25": {
+        "f1": 0.8003809523809522,
+        "prefill_latency_s_mean": 0.05514496782794595,
+        "prefill_latency_s_p50": 0.04865893488749862,
+        "prefill_latency_s_p95": 0.07545133694075046,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            2,
+            25
+          ],
+          "recompute_layer_count": 24,
+          "profiling_f1": 0.8003809523809522,
+          "profiling_latency_s": 0.06354750830680132
+        }
+      },
+      "droidspeak_layers_06_31": {
+        "f1": 0.8003809523809524,
+        "prefill_latency_s_mean": 0.058232224341481925,
+        "prefill_latency_s_p50": 0.05101272091269493,
+        "prefill_latency_s_p95": 0.08055031881667672,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            6,
+            31
+          ],
+          "recompute_layer_count": 26,
+          "profiling_f1": 0.8003809523809524,
+          "profiling_latency_s": 0.06614669017493725
+        }
+      },
+      "droidspeak_layers_04_31": {
+        "f1": 0.8203809523809524,
+        "prefill_latency_s_mean": 0.0614104270003736,
+        "prefill_latency_s_p50": 0.0533576812595129,
+        "prefill_latency_s_p95": 0.08571279249154029,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            4,
+            31
+          ],
+          "recompute_layer_count": 28,
+          "profiling_f1": 0.8203809523809524,
+          "profiling_latency_s": 0.07233870760537683
+        }
+      },
+      "droidspeak_layers_02_31": {
+        "f1": 0.8270476190476189,
+        "prefill_latency_s_mean": 0.06408620867878198,
+        "prefill_latency_s_p50": 0.05482226936146617,
+        "prefill_latency_s_p95": 0.08967188647948204,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            2,
+            31
+          ],
+          "recompute_layer_count": 30,
+          "profiling_f1": 0.8270476190476189,
+          "profiling_latency_s": 0.07243136474862695
+        }
+      },
+      "droidspeak_layers_00_31": {
+        "f1": 0.8003809523809522,
+        "prefill_latency_s_mean": 0.06465183675289154,
+        "prefill_latency_s_p50": 0.055041102692484856,
+        "prefill_latency_s_p95": 0.09279858232475816,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            0,
+            31
+          ],
+          "recompute_layer_count": 32,
+          "profiling_f1": 0.8003809523809522,
+          "profiling_latency_s": 0.07048296926543117
+        }
+      },
+      "token_only_ratio_0p200": {
+        "f1": 0.19238095238095237,
+        "prefill_latency_s_mean": 0.05647068507969379,
+        "prefill_latency_s_p50": 0.055691756308078766,
+        "prefill_latency_s_p95": 0.057475574081763625,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            0,
+            0
+          ],
+          "full_recompute_layer_count": 1,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "recompute_work_ratio": 0.225,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_12_13_ratio_0p200": {
+        "f1": 0.4411428571428571,
+        "prefill_latency_s_mean": 0.05512330122292042,
+        "prefill_latency_s_p50": 0.05491385888308287,
+        "prefill_latency_s_p95": 0.055780730117112404,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            12,
+            13
+          ],
+          "recompute_layer_count": 2,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 3,
+          "recompute_work_ratio": 0.275,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_14_17_ratio_0p200": {
+        "f1": 0.5997142857142858,
+        "prefill_latency_s_mean": 0.054919477943331005,
+        "prefill_latency_s_p50": 0.05449353763833642,
+        "prefill_latency_s_p95": 0.05607953080907464,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            14,
+            17
+          ],
+          "recompute_layer_count": 4,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 5,
+          "recompute_work_ratio": 0.325,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_12_17_ratio_0p200": {
+        "f1": 0.6403809523809525,
+        "prefill_latency_s_mean": 0.05508166845887899,
+        "prefill_latency_s_p50": 0.0542464517056942,
+        "prefill_latency_s_p95": 0.05714647690765559,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            12,
+            17
+          ],
+          "recompute_layer_count": 6,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 7,
+          "recompute_work_ratio": 0.375,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_12_19_ratio_0p200": {
+        "f1": 0.6775238095238096,
+        "prefill_latency_s_mean": 0.05538505118340254,
+        "prefill_latency_s_p50": 0.05396445142105222,
+        "prefill_latency_s_p95": 0.06008997638709843,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            12,
+            19
+          ],
+          "recompute_layer_count": 8,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 9,
+          "recompute_work_ratio": 0.42500000000000004,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_10_19_ratio_0p200": {
+        "f1": 0.7175238095238096,
+        "prefill_latency_s_mean": 0.05570167290046811,
+        "prefill_latency_s_p50": 0.054087597876787186,
+        "prefill_latency_s_p95": 0.06158954622223973,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            19
+          ],
+          "recompute_layer_count": 10,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 11,
+          "recompute_work_ratio": 0.475,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_10_21_ratio_0p200": {
+        "f1": 0.7403809523809524,
+        "prefill_latency_s_mean": 0.05629969652742148,
+        "prefill_latency_s_p50": 0.05394239956513047,
+        "prefill_latency_s_p95": 0.06383266942575573,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            21
+          ],
+          "recompute_layer_count": 12,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 13,
+          "recompute_work_ratio": 0.525,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_08_21_ratio_0p200": {
+        "f1": 0.7803809523809524,
+        "prefill_latency_s_mean": 0.057081450819969175,
+        "prefill_latency_s_p50": 0.05314731691032648,
+        "prefill_latency_s_p95": 0.06986407805234193,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            8,
+            21
+          ],
+          "recompute_layer_count": 14,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 15,
+          "recompute_work_ratio": 0.575,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_10_25_ratio_0p200": {
+        "f1": 0.7403809523809524,
+        "prefill_latency_s_mean": 0.057958580423146486,
+        "prefill_latency_s_p50": 0.053692006040364504,
+        "prefill_latency_s_p95": 0.07027854570187628,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            25
+          ],
+          "recompute_layer_count": 16,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 17,
+          "recompute_work_ratio": 0.625,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_10_27_ratio_0p200": {
+        "f1": 0.7403809523809524,
+        "prefill_latency_s_mean": 0.05896159032359719,
+        "prefill_latency_s_p50": 0.05530492961406708,
+        "prefill_latency_s_p95": 0.07392354030162095,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            27
+          ],
+          "recompute_layer_count": 18,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 19,
+          "recompute_work_ratio": 0.675,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_06_25_ratio_0p200": {
+        "f1": 0.7937142857142857,
+        "prefill_latency_s_mean": 0.05978834638372064,
+        "prefill_latency_s_p50": 0.05362108023837209,
+        "prefill_latency_s_p95": 0.07746588746085761,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            6,
+            25
+          ],
+          "recompute_layer_count": 20,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 21,
+          "recompute_work_ratio": 0.725,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_10_31_ratio_0p200": {
+        "f1": 0.7070476190476191,
+        "prefill_latency_s_mean": 0.06113721277564764,
+        "prefill_latency_s_p50": 0.054763360414654016,
+        "prefill_latency_s_p95": 0.07978346399031577,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            10,
+            31
+          ],
+          "recompute_layer_count": 22,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 23,
+          "recompute_work_ratio": 0.775,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_02_25_ratio_0p200": {
+        "f1": 0.8003809523809522,
+        "prefill_latency_s_mean": 0.061496708281338214,
+        "prefill_latency_s_p50": 0.053985214326530695,
+        "prefill_latency_s_p95": 0.08378233797848222,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            2,
+            25
+          ],
+          "recompute_layer_count": 24,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 25,
+          "recompute_work_ratio": 0.825,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_06_31_ratio_0p200": {
+        "f1": 0.8203809523809524,
+        "prefill_latency_s_mean": 0.063218844383955,
+        "prefill_latency_s_p50": 0.05568606127053499,
+        "prefill_latency_s_p95": 0.0864041522145271,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            6,
+            31
+          ],
+          "recompute_layer_count": 26,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 27,
+          "recompute_work_ratio": 0.875,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_04_31_ratio_0p200": {
+        "f1": 0.8270476190476189,
+        "prefill_latency_s_mean": 0.06435139194130897,
+        "prefill_latency_s_p50": 0.05567660601809621,
+        "prefill_latency_s_p95": 0.09035210148431361,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            4,
+            31
+          ],
+          "recompute_layer_count": 28,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 29,
+          "recompute_work_ratio": 0.925,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_02_31_ratio_0p200": {
+        "f1": 0.8270476190476189,
+        "prefill_latency_s_mean": 0.06553188629448414,
+        "prefill_latency_s_p50": 0.05586791504174471,
+        "prefill_latency_s_p95": 0.09398644678294657,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            2,
+            31
+          ],
+          "recompute_layer_count": 30,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 31,
+          "recompute_work_ratio": 0.975,
+          "reference_mode": false
+        }
+      },
+      "hybrid_layers_00_31_ratio_0p200": {
+        "f1": 0.8003809523809522,
+        "prefill_latency_s_mean": 0.06647896029055118,
+        "prefill_latency_s_p50": 0.05973971961066127,
+        "prefill_latency_s_p95": 0.09554453459568321,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            0,
+            31
+          ],
+          "recompute_layer_count": 32,
+          "token_recompute_ratio": 0.2,
+          "selected_count": 35,
+          "candidate_count": 177,
+          "selected_fraction": 0.1977401129943503,
+          "check_layer": 0,
+          "full_recompute_layer_count": 32,
+          "recompute_work_ratio": 1.0,
+          "reference_mode": false
+        }
+      }
+    }
+  },
+  "gpu_final_snapshot": {
+    "allocated_gb": 26.985535621643066,
+    "reserved_gb": 26.994140625,
+    "max_allocated_gb": 27.56266689300537
+  }
+}

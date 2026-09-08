@@ -1,0 +1,51 @@
+experiment:
+  # 新协议独立输出，绝不覆盖 plain-prompt / 8K 的早期诊断结果。
+  name: llama31_8b_base_to_instruct_chat20k
+  seed: 20260804
+  output_dir: ./outputs/llama31_8b_base_to_instruct_chat20k
+  deterministic: false
+
+models:
+  sender_path: /opt/hhy/models/Llama-3.1-8B
+  receiver_path: /opt/hhy/models/Llama-3.1-8B-Instruct
+  # B 的 chat template 只渲染一次；所得同一组 input_ids 同时送给 A 和 B。
+  tokenizer_path: /opt/hhy/models/Llama-3.1-8B-Instruct
+  trust_remote_code: false
+  torch_dtype: bfloat16
+  attention_implementation: sdpa
+  device_sender: cuda:0
+  device_receiver: cuda:0
+
+data:
+  calibration_jsonl: ./data/chat16k/calibration.jsonl
+  evaluation_jsonl: ./data/chat16k/evaluation.jsonl
+  # 当前 50 条数据的 LongBench 原始长度最大约 12.3K；16K 应完整容纳 chat headers。
+  # 代码不会截断：若仍超限，audit-inputs / 实验命令直接失败并要求提高上限。
+  max_prompt_tokens: 20480
+  max_new_tokens: 20
+  prompt_suffix_tokens: 1
+  input_format: receiver_chat
+
+cache:
+  root: ./outputs/llama31_8b_base_to_instruct_chat20k/sender_cache
+  capture_transition_layers: all
+  storage_dtype: bfloat16
+  overwrite: false
+
+profiling:
+  recompute_lengths: all
+  min_recompute_layers: 1
+  max_recompute_layers: null
+  start_layers: all
+  quality_metric: qa_f1
+  quality_tolerance_relative: 0.05
+  measure_latency_repetitions: 5
+  warmup_repetitions: 2
+  max_profiles_per_run: null
+
+evaluation:
+  selected_profile: null
+  report_per_example: true
+  save_generations: true
+  collect_cache_error: true
+  collect_transfer_bytes: true

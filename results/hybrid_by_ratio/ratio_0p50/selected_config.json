@@ -1,0 +1,70 @@
+{
+  "selection_rule_zh": "以receiver_full为质量下限，默认不允许F1下降；在满足质量约束的候选中优先选择估算重算工作量最低的DroidBlend配置。",
+  "parameter_meaning_zh": {
+    "recompute_layers": "任意连续全量重算层段[start,end]；第0层固定用于token选择并额外全量重算",
+    "token_recompute_ratio": "不在全量重算层段、且不是第0层的其他层继续重算并回填KV的token比例",
+    "recompute_work_ratio": "估算重算工作量比例，公式为 (full_layers + sparse_layers*token_ratio) / L"
+  },
+  "baseline_method": "receiver_full",
+  "max_f1_drop": 0.0,
+  "global_selection": {
+    "method": "hybrid_layers_06_25_ratio_0p500",
+    "parameters": {
+      "oracle_receiver_full_kv": false,
+      "recompute_layers": [
+        6,
+        25
+      ],
+      "recompute_layer_count": 20,
+      "token_recompute_ratio": 0.5,
+      "selected_count": 88,
+      "candidate_count": 177,
+      "selected_fraction": 0.4971751412429379,
+      "check_layer": 0,
+      "full_recompute_layer_count": 21,
+      "recompute_work_ratio": 0.828125,
+      "reference_mode": false
+    },
+    "mean_f1": 0.8137142857142856,
+    "mean_latency_s": 0.07138248650357128,
+    "min_f1_delta_vs_baseline": 0.01333333333333342,
+    "status": "feasible_all_datasets",
+    "feasible_count": 6,
+    "common_hybrid_candidate_count": 16
+  },
+  "per_dataset_selection": {
+    "hotpotqa_50": {
+      "status": "feasible",
+      "baseline_method": "receiver_full",
+      "baseline_f1": 0.8003809523809522,
+      "quality_floor": 0.8003809523809522,
+      "selected_method": "hybrid_layers_06_25_ratio_0p500",
+      "selected": {
+        "f1": 0.8137142857142856,
+        "prefill_latency_s_mean": 0.07138248650357128,
+        "prefill_latency_s_p50": 0.06677272170782089,
+        "prefill_latency_s_p95": 0.0858211918734014,
+        "samples": 50,
+        "parameters": {
+          "oracle_receiver_full_kv": false,
+          "recompute_layers": [
+            6,
+            25
+          ],
+          "recompute_layer_count": 20,
+          "token_recompute_ratio": 0.5,
+          "selected_count": 88,
+          "candidate_count": 177,
+          "selected_fraction": 0.4971751412429379,
+          "check_layer": 0,
+          "full_recompute_layer_count": 21,
+          "recompute_work_ratio": 0.828125,
+          "reference_mode": false
+        }
+      },
+      "f1_delta_vs_baseline": 0.01333333333333342,
+      "feasible_count": 6,
+      "hybrid_candidate_count": 16
+    }
+  }
+}

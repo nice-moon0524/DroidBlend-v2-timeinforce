@@ -1,0 +1,96 @@
+{
+  "method": "droidblend_reference",
+  "reference_mode": true,
+  "reference_mode_note": "DroidBlend and cacheblend-style methods use receiver full prefill as a correctness reference because stock Transformers lacks efficient arbitrary-token sparse prefill kernels.",
+  "profiling_results": "../DroidSpeak-new/profiling_results.json",
+  "recompute_layers": [
+    8,
+    21
+  ],
+  "important_fraction": 0.2,
+  "top_k": null,
+  "selection_layer": 0,
+  "methods": {
+    "hotpotqa": {
+      "full_prefill": {
+        "f1": 0.8123998556998557,
+        "prefill_latency_s": 0.05471875531412661,
+        "samples": 250
+      },
+      "full_kv_reuse": {
+        "f1": 0.09343093348846261,
+        "prefill_latency_s": 0.0226631085537374,
+        "samples": 250
+      },
+      "droidspeak": {
+        "f1": 0.747037431518285,
+        "prefill_latency_s": 0.04153983429260552,
+        "samples": 250
+      },
+      "cacheblend_reference": {
+        "f1": 0.5527204906204908,
+        "prefill_latency_s": 0.07136034011840821,
+        "samples": 250
+      },
+      "droidblend_reference": {
+        "f1": 0.7670555555555555,
+        "prefill_latency_s": 0.11467159033566714,
+        "samples": 250
+      }
+    },
+    "2wikimqa": {
+      "full_prefill": {
+        "f1": 0.8071666666666667,
+        "prefill_latency_s": 0.08204728198936209,
+        "samples": 200
+      },
+      "full_kv_reuse": {
+        "f1": 0.020102693647815598,
+        "prefill_latency_s": 0.022977878123056142,
+        "samples": 200
+      },
+      "droidspeak": {
+        "f1": 0.6385383238960826,
+        "prefill_latency_s": 0.05087649817811325,
+        "samples": 200
+      },
+      "cacheblend_reference": {
+        "f1": 0.27899999999999997,
+        "prefill_latency_s": 0.09745602341601625,
+        "samples": 200
+      },
+      "droidblend_reference": {
+        "f1": 0.6866904761904762,
+        "prefill_latency_s": 0.15353500272380188,
+        "samples": 200
+      }
+    },
+    "multifieldqa_en": {
+      "full_prefill": {
+        "f1": 0.42466728696205475,
+        "prefill_latency_s": 1.6492889673418054,
+        "samples": 150
+      },
+      "full_kv_reuse": {
+        "f1": 0.014035494986001222,
+        "prefill_latency_s": 0.02317111790490647,
+        "samples": 150
+      },
+      "droidspeak": {
+        "f1": 0.031057992650579187,
+        "prefill_latency_s": 0.9584096241400888,
+        "samples": 150
+      },
+      "cacheblend_reference": {
+        "f1": 0.023499030727135085,
+        "prefill_latency_s": 1.6709212048879514,
+        "samples": 150
+      },
+      "droidblend_reference": {
+        "f1": 0.08228353823324185,
+        "prefill_latency_s": 2.631484163785353,
+        "samples": 150
+      }
+    }
+  }
+}

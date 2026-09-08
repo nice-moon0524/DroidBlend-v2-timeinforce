@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "droidblend"
+version = "0.1.0"
+description = "DroidSpeak layer recomputation plus CacheBlend-style token KV repair for MistralLite reproduction."
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.3.0",
+  "transformers==4.57.1",
+  "PyYAML>=6.0",
+  "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+analysis = ["matplotlib>=3.8", "numpy>=1.26"]
+data = ["datasets>=2.18"]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[project.scripts]
+droidblend = "droidblend.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = [
+  "test_cache_utils.py",
+  "test_droidblend_prefill.py",
+  "test_experiment_methods_smoke.py",
+  "test_metrics.py",
+  "test_model_loading.py",
+  "test_partial_prefill_smoke.py",
+]
+addopts = "-q"
